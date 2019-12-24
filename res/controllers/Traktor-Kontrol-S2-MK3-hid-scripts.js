@@ -533,17 +533,16 @@ TraktorS2MK3.jogHandler = function (field) {
     var deckNumber = TraktorS2MK3.controller.resolveDeck(field.group);
 
     // Jog wheel control is based on the S4MK2 mapping, might need some more review
-    if (engine.isScratching(deckNumber)) {
-        var deltas = TraktorS2MK3.wheelDeltas(field.group, field.value);
-        var tickDelta = deltas[0];
-        var timeDelta = deltas[1];
 
-        var velocity = (tickDelta / timeDelta) / 3;
-        engine.setValue(field.group, "jog", velocity);
-        if (engine.getValue(field.group, "scratch2_enable")) {
-            engine.scratchTick(deckNumber, tickDelta);
-        }
+    var deltas = TraktorS2MK3.wheelDeltas(field.group, field.value);
+    var tickDelta = deltas[0];
+    var timeDelta = deltas[1];
+
+    if (engine.isScratching(deckNumber)) {
+        return engine.scratchTick(deckNumber, tickDelta);
     }
+    var velocity = (tickDelta / timeDelta);
+    engine.setValue(field.group, "jog", velocity * 2);
 };
 
 TraktorS2MK3.wheelDeltas = function (group, value) {
